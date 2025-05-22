@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { dataTagSymbol, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -106,46 +106,46 @@ const Categories = () => {
       <div className="container py-6 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Categories</h1>
-            <p className="text-muted-foreground">Manage your product categories</p>
+            <h1 className="text-3xl font-bold">Categorias</h1>
+            <p className="text-muted-foreground">Gerencie suas categorias de produto</p>
           </div>
           <Dialog>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
-                Add New Category
+                Adicionar nova categoria
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create New Category</DialogTitle>
+                <DialogTitle>Criar Nova categoria</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="nome">Category Name</Label>
+                  <Label htmlFor="nome">Nome de categoria</Label>
                   <Input 
                     id="nome" 
                     value={newCategory.nome} 
                     onChange={e => setNewCategory({...newCategory, nome: e.target.value})} 
-                    placeholder="Enter category name"
+                    placeholder="Insira o nome da categoria"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="descricao">Description (Optional)</Label>
+                  <Label htmlFor="descricao">Descrição (Opcional)</Label>
                   <Textarea 
                     id="descricao" 
                     value={newCategory.descricao} 
                     onChange={e => setNewCategory({...newCategory, descricao: e.target.value})} 
-                    placeholder="Enter category description"
+                    placeholder="Insira a descrição da categoria"
                   />
                 </div>
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline">Cancelar</Button>
                 </DialogClose>
                 <Button onClick={handleCreateCategory} disabled={isSubmitting}>
-                  {isSubmitting ? "Creating..." : "Create Category"}
+                  {isSubmitting ? "Criando..." : "Categoria criada"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -156,7 +156,7 @@ const Categories = () => {
           <div className="relative w-full max-w-md">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search categories..."
+              placeholder="Procurar categoria..."
               className="pl-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -179,7 +179,7 @@ const Categories = () => {
                   <p className="text-muted-foreground mb-2">{category.descricao}</p>
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-sm font-medium">
-                      {category.productCount} {category.productCount === 1 ? 'product' : 'products'}
+                      {category.productCount} {category.productCount === 1 ? 'produto' : 'produtos'}
                     </span>
                     <Button variant="outline" size="sm" asChild>
                       <Link to={`/categories/${encodeURIComponent(category.nome)}`}>View</Link>
@@ -191,7 +191,7 @@ const Categories = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium">No categories found</h3>
+            <h3 className="text-lg font-medium">Nenhuma</h3>
             <p className="text-muted-foreground mt-1">
               {searchQuery ? "Try a different search term" : "Create your first category to get started"}
             </p>

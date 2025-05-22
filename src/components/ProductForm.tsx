@@ -214,7 +214,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="sm" asChild>
-          <Link to={isEdit && productId ? `/products/${productId}` : "/products"}>
+          <Link to={isEdit && productId ? `/${productId}` : "/"}>
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back
           </Link>

@@ -32,7 +32,7 @@ const App = () => (
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Index />} />
-              <Route path="/products" element={<Products />} />
+              {/* <Route path="/products" element={<Products />} /> */}
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/products/new" element={<CreateProduct />} />
               <Route path="/products/edit/:id" element={<EditProduct />} />
@@ -48,5 +48,6 @@ const App = () => (
     </AuthProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

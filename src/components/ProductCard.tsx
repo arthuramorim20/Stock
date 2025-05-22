@@ -33,21 +33,21 @@ const ProductCard = ({
         </div>
         <div className="my-2">
           <div className="flex justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Price</span>
+            <span className="text-sm text-muted-foreground">Preço</span>
             <span className="font-medium">${price.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Quantity</span>
+            <span className="text-sm text-muted-foreground">Quantidade</span>
             <span className="font-medium">{quantity}</span>
           </div>
         </div>
       </CardContent>
       <CardFooter className="border-t p-4 flex gap-2">
         <Button asChild variant="outline" size="sm" className="w-full">
-          <Link to={`/products/${id}`}>View Details</Link>
+          <Link to={`/products/${id}`}>Ver detalhes</Link>
         </Button>
         <Button asChild size="sm" className="w-full">
-          <Link to={`/products/edit/${id}`}>Edit</Link>
+          <Link to={`/products/edit/${id}`}>Editar</Link>
         </Button>
       </CardFooter>
     </Card>

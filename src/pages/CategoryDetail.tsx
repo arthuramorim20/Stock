@@ -167,16 +167,16 @@ const CategoryDetail = () => {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Category
+                  Editar Categorias
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Edit Category</DialogTitle>
+                  <DialogTitle>Editar Categoria</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nome">Category Name</Label>
+                    <Label htmlFor="nome">Nome da categoria</Label>
                     <Input 
                       id="nome" 
                       value={editCategory.nome} 
@@ -185,7 +185,7 @@ const CategoryDetail = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="descricao">Description (Optional)</Label>
+                    <Label htmlFor="descricao">Descrição (Opcional)</Label>
                     <Textarea 
                       id="descricao" 
                       value={editCategory.descricao} 
@@ -196,7 +196,7 @@ const CategoryDetail = () => {
                 </div>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">Cancelar</Button>
                   </DialogClose>
                   <Button onClick={handleEditCategory} disabled={isSubmitting}>
                     {isSubmitting ? "Updating..." : "Update Category"}
@@ -236,7 +236,7 @@ const CategoryDetail = () => {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>Total Products</CardTitle>
+              <CardTitle>Produtos totais</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{totalProducts}</p>
@@ -245,7 +245,7 @@ const CategoryDetail = () => {
           
           <Card>
             <CardHeader>
-              <CardTitle>Total Inventory</CardTitle>
+              <CardTitle>Total Inventário</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{totalItems} units</p>
@@ -254,7 +254,7 @@ const CategoryDetail = () => {
           
           <Card>
             <CardHeader>
-              <CardTitle>Inventory Value</CardTitle>
+              <CardTitle>Valor do inventário</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">${totalValue.toFixed(2)}</p>
@@ -298,7 +298,7 @@ const CategoryDetail = () => {
               {searchQuery ? "Try a different search term" : "Add products to this category to see them here"}
             </p>
             <Button className="mt-4" asChild>
-              <Link to="/products/new">Add New Product</Link>
+              <Link to="/products/new">Adicionar novo produto</Link>
             </Button>
           </div>
         )}

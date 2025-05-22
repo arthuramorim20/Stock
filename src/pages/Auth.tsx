@@ -15,6 +15,9 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<AuthMode>("signin");
   const [loading, setLoading] = useState(false);
+
+
+
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -31,12 +34,12 @@ const Auth = () => {
         });
 
         if (error) throw error;
-        
+
         toast({
           title: "Welcome back!",
           description: "You have successfully signed in."
         });
-        
+
         navigate("/");
       } else {
         const { error } = await supabase.auth.signUp({
@@ -45,7 +48,7 @@ const Auth = () => {
         });
 
         if (error) throw error;
-        
+
         toast({
           title: "Account created",
           description: "Please check your email for verification instructions."
@@ -62,9 +65,13 @@ const Auth = () => {
     }
   };
 
+  console.log(`Aqui é o loading${loading}`)
+
+  console.log(`Aqui é o handlerAuth${handleAuth}`)
+
   // Check if user is already logged in
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  
+
   useState(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsLoggedIn(!!session);

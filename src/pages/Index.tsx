@@ -90,7 +90,7 @@ const Index = () => {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Recent Products</CardTitle>
+                <CardTitle>Produtos Recentes</CardTitle>
                 <Button asChild variant="ghost" size="sm">
                   <Link to="/products">Ver todos</Link>
                 </Button>

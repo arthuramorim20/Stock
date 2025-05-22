@@ -31,8 +31,8 @@ const Navbar = () => {
         </div>
         <nav className="flex items-center gap-4 md:gap-6 ml-6 lg:ml-10">
           <Link to="/" className="text-sm font-medium hover:underline underline-offset-4">Dashboard</Link>
-          <Link to="/products" className="text-sm font-medium hover:underline underline-offset-4">Products</Link>
-          <Link to="/categories" className="text-sm font-medium hover:underline underline-offset-4">Categories</Link>
+          {/* <Link to="/products" className="text-sm font-medium hover:underline underline-offset-4">Products</Link> */}
+          <Link to="/categories" className="text-sm font-medium hover:underline underline-offset-4">Categorias</Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">
           {user ? (
@@ -48,10 +48,10 @@ const Navbar = () => {
                   <span className="text-muted-foreground">{user.email}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/profile" className="flex w-full items-center">Profile</Link>
+                  <Link to="/profile" className="flex w-full items-center">Perfil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/settings" className="flex w-full items-center">Settings</Link>
+                  <Link to="/settings" className="flex w-full items-center">Configurações</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
                   <div className="flex w-full items-center">
