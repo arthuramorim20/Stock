@@ -116,7 +116,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
         description: "Product has been created successfully."
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      navigate('/products');
+      navigate('/');
     },
     onError: (error: Error) => {
       toast({
@@ -214,7 +214,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="sm" asChild>
-          <Link to={isEdit && productId ? `/products/${productId}` : "/products"}>
+          <Link to={isEdit && productId ? `/products/${productId}` : "/"}>
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back
           </Link>
@@ -320,7 +320,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
             )}
           </Button>
           <Button variant="outline" type="button" asChild>
-            <Link to={isEdit && productId ? `/products/${productId}` : "/products"}>
+            <Link to={isEdit && productId ? `/products/${productId}` : "/"}>
               Cancel
             </Link>
           </Button>

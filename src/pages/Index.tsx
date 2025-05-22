@@ -57,32 +57,32 @@ const Index = () => {
             <p className="text-muted-foreground">Welcome to your stock management dashboard</p>
           </div>
           <Button asChild>
-            <Link to="/products/new">Add New Product</Link>
+            <Link to="/products/new">Adicionar novo produto</Link>
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">  {/*essa função retorna o conteúdo dos cards da dashboard utilizando lucide para icons*/}
           <StatCard
-            title="Total Products"
+            title="Total de Produtos"
             value={mockDashboardStats.totalProducts}
             icon={<Package className="h-4 w-4" />}
           />
           <StatCard
-            title="Low Stock Items"
+            title="Baixo Estoque de Items"
             value={mockDashboardStats.lowStockProducts}
             icon={<AlertTriangle className="h-4 w-4" />}
           />
           <StatCard
-            title="Out of Stock"
+            title="Fora de estoque"
             value={mockDashboardStats.outOfStockProducts}
             icon={<ShoppingCart className="h-4 w-4" />}
           />
           <StatCard
-            title="Total Inventory Value"
-            value={`$${mockDashboardStats.totalValue.toFixed(2)}`}
-            icon={<DollarSign className="h-4 w-4" />}
+            title="Valor total do iventário"
+            value={`R$${mockDashboardStats.totalValue.toFixed(2)}`}
+            icon={'R$'}
             trend={{ value: 12, isPositive: true }}
-            description="from last month"
+            description="do ultimo mês"
           />
         </div>
 
@@ -90,10 +90,10 @@ const Index = () => {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Recent Products</CardTitle>
-                <Button asChild variant="ghost" size="sm">
+                <CardTitle>Produtos Recentes</CardTitle>
+                {/* <Button asChild variant="ghost" size="sm">
                   <Link to="/products">Ver todos</Link>
-                </Button>
+                </Button> */}
               </div>
               <CardDescription>Produtos Adicionado Recentemente</CardDescription>
             </CardHeader>
@@ -117,7 +117,7 @@ const Index = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Low Stock Alerts</CardTitle>
+              <CardTitle>Alertas de baixo estoque</CardTitle>
               <CardDescription>Products that need attention</CardDescription>
             </CardHeader>
             <CardContent>
@@ -151,8 +151,8 @@ const Index = () => {
                 <CardTitle>All Products</CardTitle>
                 <CardDescription>Manage your inventory</CardDescription>
               </div>
-              <SearchInput 
-                placeholder="Search products..." 
+              <SearchInput
+                placeholder="Search products..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 className="w-full sm:w-64"
@@ -162,8 +162,8 @@ const Index = () => {
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {products
-                .filter(product => 
-                  product.nome.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                .filter(product =>
+                  product.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
                   product.categoria.toLowerCase().includes(searchQuery.toLowerCase()) ||
                   product.sku.toLowerCase().includes(searchQuery.toLowerCase())
                 )

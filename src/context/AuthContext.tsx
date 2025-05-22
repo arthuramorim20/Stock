@@ -10,6 +10,7 @@ type AuthContextType = {
   signOut: () => Promise<void>; //Tipo genérico void que é asyncrono que pode ser executado
 };
 
+
 export const AuthContext = createContext<AuthContextType | undefined>(undefined); //Recebe o type AuthContext
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -37,8 +38,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  console.log(session)
-
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -49,6 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     signOut,
   };
+
+  console.log(value)
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
