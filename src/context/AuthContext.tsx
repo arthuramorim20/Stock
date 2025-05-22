@@ -4,18 +4,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 
 type AuthContextType = {
-  session: Session | null;
+  session: Session | null; //Recebe dados da instância do supabase client
   user: User | null;
   loading: boolean;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<void>; //Tipo genérico void que é asyncrono que pode ser executado
 };
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined); //Recebe o type AuthContext
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null); //Recebe a session do user da interface type que construímos
+  const [user, setUser] = useState<User | null>(null);//receber o user
+  const [loading, setLoading] = useState(true); //recebe o loading como estado inicial sendo true
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -36,6 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  console.log(session)
 
   const signOut = async () => {
     await supabase.auth.signOut();
