@@ -214,7 +214,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="sm" asChild>
-          <Link to={isEdit && productId ? `/products/${productId}` : "/"}>
+          <Link to={isEdit && productId ? `/` : "/"}>
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back
           </Link>
@@ -223,13 +223,13 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
 
       <div className="flex items-center gap-2 mb-6">
         <Package className="h-6 w-6" />
-        <h1 className="text-2xl font-bold">{isEdit ? "Edit Product" : "Create New Product"}</h1>
+        <h1 className="text-2xl font-bold">{isEdit ? "Editar produto" : "Criar novo produto"}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="nome">Product Name *</Label>
+            <Label htmlFor="nome">Nome do produto *</Label>
             <Input
               id="nome"
               name="nome"
@@ -240,7 +240,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sku">SKU/Code *</Label>
+            <Label htmlFor="sku">SKU/Código *</Label>
             <Input
               id="sku"
               name="sku"
@@ -251,7 +251,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="preco">Price *</Label>
+            <Label htmlFor="preco">Preço *</Label>
             <Input
               id="preco"
               name="preco"
@@ -265,7 +265,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="estoque">Quantity</Label>
+            <Label htmlFor="estoque">Quantidade</Label>
             <Input
               id="estoque"
               name="estoque"
@@ -277,13 +277,13 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="categoria">Category</Label>
+            <Label htmlFor="categoria">Categoria</Label>
             <Select 
               value={formData.categoria} 
               onValueChange={handleCategoryChange}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
+                <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
                 {categories?.map((category, index) => (
@@ -291,14 +291,14 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
                     {category}
                   </SelectItem>
                 ))}
-                <SelectItem value="new">+ Add New Category</SelectItem>
+                <SelectItem value="new">+ Adicionar nova categoria</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="descricao">Description</Label>
+          <Label htmlFor="descricao">Descrição</Label>
           <Textarea
             id="descricao"
             name="descricao"

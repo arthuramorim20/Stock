@@ -32,6 +32,7 @@ const ProductDetail = () => {
       return data;
     }
   });
+  
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
@@ -110,7 +111,7 @@ const ProductDetail = () => {
       <div className="container py-6 space-y-6">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/products">
+            <Link to="/">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back
             </Link>

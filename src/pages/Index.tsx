@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import ProductCard from "@/components/ProductCard";
-import { mockDashboardStats, mockProducts } from "@/data/mockData";
+import { mockDashboardStats, mockCategories } from "@/data/mockData";
 import { Package, ShoppingCart, AlertTriangle, DollarSign } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
@@ -43,9 +43,12 @@ const Index = () => {
     initialData: [],
   });
 
-  const lowStockProducts = mockProducts
-    .filter(product => product.stockLevel === "low" || product.stockLevel === "out")
-    .slice(0, 3);
+  function getLowStockProducts(products: productProps[]) {
+    return products.filter((product) => product.estoque <= 5);
+  }
+
+  const lowStockProducts = getLowStockProducts(products).slice(0, 3);
+
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
@@ -148,7 +151,7 @@ const Index = () => {
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <CardTitle>All Products</CardTitle>
+                <CardTitle>Produtos</CardTitle>
                 <CardDescription>Manage your inventory</CardDescription>
               </div>
               <SearchInput
