@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import ProductCard from "@/components/ProductCard";
-import { mockDashboardStats, mockProducts } from "@/data/mockData";
+// import { mockDashboardStats, mockProducts } from "@/data/mockData";
 import { Package, ShoppingCart, AlertTriangle, DollarSign } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
@@ -43,9 +43,9 @@ const Index = () => {
     initialData: [],
   });
 
-  const lowStockProducts = mockProducts
-    .filter(product => product.stockLevel === "low" || product.stockLevel === "out")
-    .slice(0, 3);
+  const lowStockProducts = supabase.rpc('produtos_estoque_baixo', {
+    limite_estoque: 2
+  })
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
