@@ -6,26 +6,16 @@ import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import ProductCard from "@/components/ProductCard";
 import { mockDashboardStats, mockCategories } from "@/data/mockData";
-import { Package, ShoppingCart, AlertTriangle, DollarSign } from "lucide-react";
+import { Package, ShoppingCart, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-
-type productProps = {
-  id: number,
-  nome: string,
-  descricao: string,
-  preco: number,
-  categoria: string,
-  sku: string,
-  estoque: number,
-  criado_em: string
-}
+import { Product, DashboardStat, Category } from "../types"
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState<productProps[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useQuery({
     queryKey: ['produtos'],
@@ -36,14 +26,12 @@ const Index = () => {
 
       if (error) throw error;
 
-      setProducts(data)
-
       return data;
     },
     initialData: [],
   });
 
-  function getLowStockProducts(products: productProps[]) {
+  function getLowStockProducts(products: Product[]) {
     return products.filter((product) => product.estoque <= 5);
   }
 
@@ -94,9 +82,6 @@ const Index = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Produtos Recentes</CardTitle>
-                {/* <Button asChild variant="ghost" size="sm">
-                  <Link to="/products">Ver todos</Link>
-                </Button> */}
               </div>
               <CardDescription>Produtos Adicionado Recentemente</CardDescription>
             </CardHeader>
