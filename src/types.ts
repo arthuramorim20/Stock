@@ -24,3 +24,4 @@ export interface DashboardStat {
   outOfStockProducts: number;
   totalValue: number;
 }
+

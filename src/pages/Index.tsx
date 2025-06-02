@@ -5,13 +5,15 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import ProductCard from "@/components/ProductCard";
-import { mockDashboardStats, mockCategories } from "@/data/mockData";
+import { fetchDashboardStats, mockCategories } from "@/data/mockData";
 import { Package, ShoppingCart, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Product, DashboardStat, Category } from "../types"
+
+
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +39,17 @@ const Index = () => {
 
   const lowStockProducts = getLowStockProducts(products).slice(0, 3);
 
+  const { data: dashboardStats, isLoading: isLoadingStats } = useQuery({
+    queryKey: ["dashboardStats"],
+    queryFn: fetchDashboardStats,
+    initialData: {
+      totalProducts: 0,
+      lowStockProducts: 0,
+      outOfStockProducts: 0,
+      totalValue: 0,
+    },
+  });
+
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
@@ -55,22 +68,22 @@ const Index = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">  {/*essa função retorna o conteúdo dos cards da dashboard utilizando lucide para icons*/}
           <StatCard
             title="Total de Produtos"
-            value={mockDashboardStats.totalProducts}
+            value={dashboardStats.totalProducts} 
             icon={<Package className="h-4 w-4" />}
           />
           <StatCard
             title="Baixo Estoque de Items"
-            value={mockDashboardStats.lowStockProducts}
+            value={dashboardStats.lowStockProducts}
             icon={<AlertTriangle className="h-4 w-4" />}
           />
           <StatCard
             title="Fora de estoque"
-            value={mockDashboardStats.outOfStockProducts}
+            value={dashboardStats.outOfStockProducts}
             icon={<ShoppingCart className="h-4 w-4" />}
           />
           <StatCard
             title="Valor total do iventário"
-            value={`R$${mockDashboardStats.totalValue.toFixed(2)}`}
+            value={`R$${dashboardStats.totalValue.toFixed(2)}`}
             icon={'R$'}
             trend={{ value: 12, isPositive: true }}
             description="do ultimo mês"

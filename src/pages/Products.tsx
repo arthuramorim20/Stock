@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { mockCategories, mockProducts } from "@/data/mockData";
+import { mockCategories, fetchMockProducts } from "@/data/mockData";
 import ProductCard from "@/components/ProductCard";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   Select,
   SelectContent,
@@ -18,12 +19,18 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [stockFilter, setStockFilter] = useState("");
 
-  const filteredProducts = mockProducts.filter(product => {
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["produtos"],
+    queryFn: fetchMockProducts, // ou fetchProducts do seu adapter Supabase
+    initialData: [],
+  });
+
+  const filteredProducts = products.filter(product => {
     // Search filter
     const matchesSearch =
-      product.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.descricao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchQuery.toLowerCase());
+      product.nome.toLowerCase().includes(searchQuery.toLowerCase());
+    product.descricao.toLowerCase().includes(searchQuery.toLowerCase());
+    product.sku.toLowerCase().includes(searchQuery.toLowerCase());;
 
     // Category filter
     const matchesCategory = selectedCategory ? product.categoria === selectedCategory : true;
