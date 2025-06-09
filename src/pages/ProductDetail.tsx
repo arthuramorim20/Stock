@@ -48,19 +48,11 @@ const ProductDetail = () => {
     
     setIsDeleting(true);
     try {
-      // First, delete related records in movimentacoes_estoque
-      const { error: movimentacoesError } = await supabase
-        .from('movimentacoes_estoque')
-        .delete()
-        .eq('produto_id', parseInt(id));
-      
-      if (movimentacoesError) throw movimentacoesError;
-
-      // Then delete the product
+      // Call the delete_product stored procedure
       const { error } = await supabase
-        .from('produtos')
-        .delete()
-        .eq('id', parseInt(id));
+        .rpc('delete_product', {
+          p_id: parseInt(id)
+        });
       
       if (error) throw error;
       
