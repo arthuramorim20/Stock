@@ -1,6 +1,4 @@
-
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -18,11 +16,11 @@ const Categories = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [newCategory, setNewCategory] = useState({ nome: "", descricao: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: categoriesData, isLoading, refetch } = useQuery({
-    queryKey: ["categories-full"],
-    queryFn: async () => {
-      // Get unique categories and count products in each
+  const fetchCategories = async () => {
+    try {
       const { data: products, error } = await supabase
         .from("produtos")
         .select("categoria");
@@ -30,7 +28,7 @@ const Categories = () => {
       if (error) throw error;
 
       // Count and group products by category
-      const categoryCounts: Record<string, number> = {};
+      const categoryCounts = {};
       products.forEach(product => {
         if (product.categoria) {
           categoryCounts[product.categoria] = (categoryCounts[product.categoria] || 0) + 1;
@@ -45,9 +43,22 @@ const Categories = () => {
         descricao: `Collection of ${count} ${count === 1 ? 'product' : 'products'}`
       }));
 
-      return formattedCategories;
+      setCategoriesData(formattedCategories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load categories",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
     }
-  });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleCreateCategory = async () => {
     if (!newCategory.nome.trim()) {
@@ -82,7 +93,7 @@ const Categories = () => {
       });
 
       // Refetch categories
-      refetch();
+      fetchCategories();
       setNewCategory({ nome: "", descricao: "" });
       
     } catch (error) {

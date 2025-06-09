@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { mockCategories, fetchMockProducts } from "@/data/mockData";
 import ProductCard from "@/components/ProductCard";
 import SearchInput from "@/components/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import {
   Select,
   SelectContent,
@@ -18,12 +17,23 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [stockFilter, setStockFilter] = useState("");
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ["produtos"],
-    queryFn: fetchMockProducts, // ou fetchProducts do seu adapter Supabase
-    initialData: [],
-  });
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await fetchMockProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => {
     // Search filter

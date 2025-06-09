@@ -1,7 +1,5 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -18,7 +16,6 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Package } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { supabase } from '../integrations/supabase/'
 
 interface ProductFormProps {
   productId?: string;
@@ -27,7 +24,6 @@ interface ProductFormProps {
 
 const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
     nome: "",
@@ -40,123 +36,122 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
 
-  // Fetch categories for dropdown
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('categoria')
-        .not('categoria', 'is', null)
-        .order('categoria', { ascending: true });
-      
-      if (error) throw error;
-      
-      const uniqueCategories = [...new Set(data.map(item => item.categoria))].filter(Boolean);
-      
-      return uniqueCategories;
-    },
-    initialData: [],
-  });
-
-  // If editing, fetch existing product data
-  const { data: productData, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ['product', productId],
-    queryFn: async () => {
-      if (!productId) return null;
-      
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-        .eq('id', parseInt(productId))
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!productId,
-  });
-
+  // Fetch categories
   useEffect(() => {
-    if (productData) {
-      setFormData({
-        nome: productData.nome,
-        sku: productData.sku,
-        descricao: productData.descricao || "",
-        preco: productData.preco.toString(),
-        estoque: productData.estoque?.toString() || "0",
-        categoria: productData.categoria || "",
-      });
-    }
-  }, [productData]);
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('produtos')
+          .select('categoria')
+          .not('categoria', 'is', null)
+          .order('categoria', { ascending: true });
+        
+        if (error) throw error;
+        
+        const uniqueCategories = [...new Set(data.map(item => item.categoria))].filter(Boolean);
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  type ProductInsert = {
-    nome: string;
-    sku: string;
-    descricao?: string | null;
-    preco: number;
-    estoque?: number;
-    categoria?: string | null;
+    fetchCategories();
+  }, []);
+
+  // Fetch product data if editing
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) return;
+      
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('produtos')
+          .select('*')
+          .eq('id', parseInt(productId))
+          .single();
+        
+        if (error) throw error;
+        
+        setFormData({
+          nome: data.nome,
+          sku: data.sku,
+          descricao: data.descricao || "",
+          preco: data.preco.toString(),
+          estoque: data.estoque?.toString() || "0",
+          categoria: data.categoria || "",
+        });
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load product data",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isEdit) {
+      fetchProduct();
+    }
+  }, [productId, isEdit]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const productData = {
+        nome: formData.nome,
+        sku: formData.sku,
+        descricao: formData.descricao,
+        preco: parseFloat(formData.preco),
+        estoque: parseInt(formData.estoque),
+        categoria: formData.categoria,
+      };
+
+      if (isEdit && productId) {
+        const { error } = await supabase
+          .from('produtos')
+          .update(productData)
+          .eq('id', parseInt(productId))
+          .select();
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Success",
+          description: "Product has been updated successfully."
+        });
+        navigate(`/products/${productId}`);
+      } else {
+        const { error } = await supabase
+          .from('produtos')
+          .insert([productData])
+          .select();
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Success",
+          description: "Product has been created successfully."
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to ${isEdit ? 'update' : 'create'} product: ${error.message}`,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  const createProductMutation = useMutation({
-    mutationFn: async (productData: ProductInsert) => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .insert([productData])
-        .select();
-      
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Product has been created successfully."
-      });
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      navigate('/');
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Error",
-        description: `Failed to create product: ${error.message}`,
-        variant: "destructive"
-      });
-      setIsSubmitting(false);
-    }
-  });
-
-  const updateProductMutation = useMutation({
-    mutationFn: async ({ id, productData }: { id: string, productData: unknown }) => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .update(productData)
-        .eq('id', parseInt(id))
-        .select();
-      
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Product has been updated successfully."
-      });
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['product', productId] });
-      navigate(`/products/${productId}`);
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Error",
-        description: `Failed to update product: ${error.message}`,
-        variant: "destructive"
-      });
-      setIsSubmitting(false);
-    }
-  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -167,42 +162,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
     setFormData(prev => ({ ...prev, categoria: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Basic validation
-      if (!formData.nome || !formData.sku || !formData.preco) {
-        throw new Error("Name, SKU and Price are required fields.");
-      }
-
-      // Convert types
-      const productData = {
-        nome: formData.nome,
-        sku: formData.sku,
-        descricao: formData.descricao || null,
-        preco: parseFloat(formData.preco),
-        estoque: parseInt(formData.estoque) || 0,
-        categoria: formData.categoria || null,
-      };
-
-      if (isEdit && productId) {
-        updateProductMutation.mutate({ id: productId, productData });
-      } else {
-        createProductMutation.mutate(productData);
-      }
-    } catch (error) {
-      toast({
-        title: "Validation Error",
-        description: error instanceof Error ? error.message : "Please check your form inputs.",
-        variant: "destructive"
-      });
-      setIsSubmitting(false);
-    }
-  };
-
-  if (isEdit && isLoadingProduct) {
+  if (isEdit && isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>

@@ -31,7 +31,6 @@ const Navbar = () => {
         </div>
         <nav className="flex items-center gap-4 md:gap-6 ml-6 lg:ml-10">
           <Link to="/" className="text-sm font-medium hover:underline underline-offset-4">Dashboard</Link>
-          <Link to="/products" className="text-sm font-medium hover:underline underline-offset-4">Products</Link>
           <Link to="/categories" className="text-sm font-medium hover:underline underline-offset-4">Categories</Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">

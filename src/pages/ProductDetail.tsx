@@ -1,7 +1,5 @@
-
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -17,51 +15,70 @@ import { Link } from "react-router-dom";
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   
-  const { data: product, isLoading, error } = useQuery({
-    queryKey: ['product', id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-        .eq('id', parseInt(id || "0"))
-        .single();
-      
-      if (error) throw error;
-      return data;
-    }
-  });
-  
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const deleteMutation = useMutation({
-    mutationFn: async () => {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('produtos')
+          .select('*')
+          .eq('id', parseInt(id || "0"))
+          .single();
+        
+        if (error) throw error;
+        setProduct(data);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const handleDelete = async () => {
+    if (!id || isDeleting) return;
+    
+    setIsDeleting(true);
+    try {
+      // First, delete related records in movimentacoes_estoque
+      const { error: movimentacoesError } = await supabase
+        .from('movimentacoes_estoque')
+        .delete()
+        .eq('produto_id', parseInt(id));
+      
+      if (movimentacoesError) throw movimentacoesError;
+
+      // Then delete the product
       const { error } = await supabase
         .from('produtos')
         .delete()
-        .eq('id', parseInt(id || "0"));
+        .eq('id', parseInt(id));
       
       if (error) throw error;
-    },
-    onSuccess: () => {
+      
       toast({
         title: "Product deleted",
         description: "The product has been successfully deleted."
       });
-      queryClient.invalidateQueries({ queryKey: ['products'] });
+      setIsDialogOpen(false);
       navigate('/products');
-    },
-    onError: (error) => {
+    } catch (error) {
       toast({
         title: "Error",
         description: `Failed to delete product: ${error.message}`,
         variant: "destructive"
       });
+    } finally {
+      setIsDeleting(false);
     }
-  });
-
-  const handleDelete = () => {
-    deleteMutation.mutate();
   };
 
   if (isLoading) {
@@ -111,7 +128,7 @@ const ProductDetail = () => {
       <div className="container py-6 space-y-6">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/">
+            <Link to="/products">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back
             </Link>
@@ -136,7 +153,7 @@ const ProductDetail = () => {
                 Edit
               </Link>
             </Button>
-            <AlertDialog>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
@@ -152,7 +169,12 @@ const ProductDetail = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                  <AlertDialogAction 
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

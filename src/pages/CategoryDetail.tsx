@@ -1,7 +1,5 @@
-
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -25,31 +23,46 @@ const CategoryDetail = () => {
   const [editCategory, setEditCategory] = useState({ nome: "", descricao: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const decodedCategoryName = categoryName ? decodeURIComponent(categoryName) : "";
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Fetch products in this category
-  const { data: products = [], isLoading, refetch } = useQuery({
-    queryKey: ['category-products', decodedCategoryName],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-        .eq('categoria', decodedCategoryName);
-      
-      if (error) throw error;
-      
-      // Add computed stockLevel property
-      return data.map(product => ({
-        ...product,
-        stockLevel: product.estoque === 0 
-          ? 'out' 
-          : product.estoque < 10 
-            ? 'low' 
-            : product.estoque < 50 
-              ? 'medium' 
-              : 'high'
-      }));
-    },
-  });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('produtos')
+          .select('*')
+          .eq('categoria', decodedCategoryName);
+        
+        if (error) throw error;
+        
+        // Add computed stockLevel property
+        const productsWithStockLevel = data.map(product => ({
+          ...product,
+          stockLevel: product.estoque === 0 
+            ? 'out' 
+            : product.estoque < 10 
+              ? 'low' 
+              : product.estoque < 50 
+                ? 'medium' 
+                : 'high'
+        }));
+
+        setProducts(productsWithStockLevel);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load products",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [decodedCategoryName]);
 
   // Get category stats
   const totalProducts = products.length;
@@ -95,8 +108,6 @@ const CategoryDetail = () => {
       // Navigate to the new category page if name changed
       if (editCategory.nome !== decodedCategoryName) {
         navigate(`/categories/${encodeURIComponent(editCategory.nome)}`);
-      } else {
-        refetch();
       }
     } catch (error) {
       toast({

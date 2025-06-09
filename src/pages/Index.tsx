@@ -1,5 +1,5 @@
-
-import { useState } from "react";
+//@ts-check
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { Package, ShoppingCart, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
 import { Product, DashboardStat, Category } from "../types"
 
 
@@ -18,38 +17,64 @@ import { Product, DashboardStat, Category } from "../types"
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-
-  useQuery({
-    queryKey: ['produtos'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-
-      if (error) throw error;
-
-      return data;
-    },
-    initialData: [],
+  const [dashboardStats, setDashboardStats] = useState<DashboardStat>({
+    totalProducts: 0,
+    lowStockProducts: 0,
+    outOfStockProducts: 0,
+    totalValue: 0,
   });
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('produtos')
+          .select('*');
+
+        if (error) throw error;
+        
+        // Convert the data to include proper stockLevel values
+        const productsWithStockLevel = data.map(product => ({
+          ...product,
+          stockLevel: product.estoque === 0 
+            ? 'out' 
+            : product.estoque < 10 
+              ? 'low' 
+              : product.estoque < 50 
+                ? 'medium' 
+                : 'high'
+        })) as Product[];
+
+        setProducts(productsWithStockLevel);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const loadDashboardStats = async () => {
+      try {
+        const stats = await fetchDashboardStats();
+        setDashboardStats(stats);
+      } catch (error) {
+        console.error("Error loading dashboard stats:", error);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+
+    loadDashboardStats();
+  }, []);
 
   function getLowStockProducts(products: Product[]) {
     return products.filter((product) => product.estoque <= 5);
   }
 
   const lowStockProducts = getLowStockProducts(products).slice(0, 3);
-
-  const { data: dashboardStats, isLoading: isLoadingStats } = useQuery({
-    queryKey: ["dashboardStats"],
-    queryFn: fetchDashboardStats,
-    initialData: {
-      totalProducts: 0,
-      lowStockProducts: 0,
-      outOfStockProducts: 0,
-      totalValue: 0,
-    },
-  });
-
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
@@ -175,7 +200,7 @@ const Index = () => {
                     name={product.nome}
                     category={product.categoria}
                     price={product.preco}
-                    stockLevel={"medium"}
+                    stockLevel={product.stockLevel}
                     quantity={product.estoque}
                   />
                 ))
