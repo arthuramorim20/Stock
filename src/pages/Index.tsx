@@ -176,7 +176,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <CardTitle>Produtos</CardTitle>
-                <CardDescription>Manage your inventory</CardDescription>
+                <CardDescription>Gerencie seu inventário</CardDescription>
               </div>
               <SearchInput
                 placeholder="Search products..."
