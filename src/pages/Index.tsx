@@ -33,16 +33,16 @@ const Index = () => {
           .select('*');
 
         if (error) throw error;
-        
+
         // Convert the data to include proper stockLevel values
         const productsWithStockLevel = data.map(product => ({
           ...product,
-          stockLevel: product.estoque === 0 
-            ? 'out' 
-            : product.estoque < 10 
-              ? 'low' 
-              : product.estoque < 50 
-                ? 'medium' 
+          stockLevel: product.estoque === 0
+            ? 'out'
+            : product.estoque < 10
+              ? 'low'
+              : product.estoque < 50
+                ? 'medium'
                 : 'high'
         })) as Product[];
 
@@ -64,6 +64,7 @@ const Index = () => {
         console.error("Error loading dashboard stats:", error);
       } finally {
         setIsLoadingStats(false);
+        
       }
     };
 
@@ -93,7 +94,7 @@ const Index = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">  {/*essa função retorna o conteúdo dos cards da dashboard utilizando lucide para icons*/}
           <StatCard
             title="Total de Produtos"
-            value={dashboardStats.totalProducts} 
+            value={dashboardStats.totalProducts}
             icon={<Package className="h-4 w-4" />}
           />
           <StatCard
@@ -132,8 +133,8 @@ const Index = () => {
                       <p className="text-sm text-muted-foreground">{product.categoria}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${product.preco.toFixed(2)}</p>
-                      <p className="text-sm text-muted-foreground">Qty: {product.estoque}</p>
+                      <p className="font-medium">R${product.preco.toFixed(2)}</p>
+                      <p className="text-sm text-muted-foreground">Qtd: {product.estoque}</p>
                     </div>
                   </div>
                 ))}
@@ -144,7 +145,7 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle>Alertas de baixo estoque</CardTitle>
-              <CardDescription>Products that need attention</CardDescription>
+              <CardDescription>Produtos que precisam de atenção</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -157,7 +158,7 @@ const Index = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-inventory-low font-medium">
-                          {product.stockLevel === "out" ? "Out of Stock" : `Only ${product.estoque} left`}
+                          {product.stockLevel === "out" ? "Fora de estoque" : `apenas ${product.estoque} restante`}
                         </p>
                       </div>
                     </div>

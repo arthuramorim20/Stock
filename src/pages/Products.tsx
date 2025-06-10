@@ -57,8 +57,8 @@ const Products = () => {
       <div className="container py-6 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Products</h1>
-            <p className="text-muted-foreground">Manage your product inventory</p>
+            <h1 className="text-3xl font-bold">Produtos</h1>
+            <p className="text-muted-foreground">Gerencie seu iventário</p>
           </div>
           <Button asChild>
             <Link to="/products/new">Add New Product</Link>

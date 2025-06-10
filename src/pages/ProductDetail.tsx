@@ -92,12 +92,12 @@ const ProductDetail = () => {
         <Navbar />
         <div className="container py-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold">Product Not Found</h2>
+            <h2 className="text-2xl font-bold">Produto não encontrado</h2>
             <p className="text-muted-foreground mt-2">
               {error ? `Error: ${error.message}` : "The requested product could not be found."}
             </p>
             <Button asChild className="mt-4">
-              <Link to="/products">Back to Products</Link>
+              <Link to="/">Voltar</Link>
             </Button>
           </div>
         </div>
@@ -120,9 +120,9 @@ const ProductDetail = () => {
       <div className="container py-6 space-y-6">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/products">
+            <Link to="/">
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
+              Voltar
             </Link>
           </Button>
         </div>
@@ -133,7 +133,7 @@ const ProductDetail = () => {
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">SKU: {product.sku}</span>
               <span>•</span>
-              <span className="text-muted-foreground">Category: {product.categoria}</span>
+              <span className="text-muted-foreground">Categoria: {product.categoria}</span>
               <StockBadge level={stockLevel} />
             </div>
           </div>
@@ -142,25 +142,25 @@ const ProductDetail = () => {
             <Button variant="outline" asChild>
               <Link to={`/products/edit/${id}`}>
                 <Edit className="h-4 w-4 mr-2" />
-                Edit
+                Editar
               </Link>
             </Button>
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
+                  Deletar
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This will permanently delete the product "{product.nome}". This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction 
                     onClick={handleDelete}
                     disabled={isDeleting}
@@ -176,45 +176,45 @@ const ProductDetail = () => {
         <div className="grid md:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Price</CardTitle>
+              <CardTitle>Preço</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">${product.preco.toFixed(2)}</p>
+              <p className="text-2xl font-bold">R${product.preco.toFixed(2)}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Stock</CardTitle>
+              <CardTitle>Estoque</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{product.estoque} units</p>
+              <p className="text-2xl font-bold">{product.estoque} Unidades</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Value</CardTitle>
+              <CardTitle>Valor total</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">${(product.preco * product.estoque).toFixed(2)}</p>
+              <p className="text-2xl font-bold">R${(product.preco * product.estoque).toFixed(2)}</p>
             </CardContent>
           </Card>
         </div>
 
         <Tabs defaultValue="details" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="details">Details</TabsTrigger>
-            <TabsTrigger value="history">Stock History</TabsTrigger>
+            <TabsTrigger value="details">Detalhes</TabsTrigger>
+            <TabsTrigger value="history">Histórico de estoque</TabsTrigger>
           </TabsList>
 
           <TabsContent value="details" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Description</CardTitle>
+                <CardTitle>Descrição</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{product.descricao || "No description available."}</p>
+                <p>{product.descricao || "Sem descrição."}</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -222,7 +222,7 @@ const ProductDetail = () => {
           <TabsContent value="history" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Stock History</CardTitle>
+                <CardTitle>Histórico de estoque</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
