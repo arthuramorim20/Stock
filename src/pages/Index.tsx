@@ -80,7 +80,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background animate-fade-in">
       <Navbar />
-      <div className="container py-6 space-y-8">
+      <div className="container py-6 space-y-8 bg-gray-200">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">Dashboard</h1>

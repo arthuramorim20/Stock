@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="border-b">
+    <div className="border-b bg-blue-400">
       <div className="flex h-16 items-center px-4 md:px-6">
         <div className="flex items-center gap-2 font-semibold">
           <Package className="h-6 w-6" />
