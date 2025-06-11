@@ -60,6 +60,13 @@ alter table "public"."produtos" add constraint "produtos_sku_key" UNIQUE using i
 
 set check_function_bodies = off;
 
+CREATE OR REPLACE FUNCTION public.delete_product(p_id integer)
+RETURNS void AS $$
+BEGIN
+  DELETE FROM products WHERE id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION public.get_stock_product(produto_id_param integer)
  RETURNS integer
  LANGUAGE plpgsql

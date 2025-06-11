@@ -61,7 +61,7 @@ const ProductDetail = () => {
         description: "The product has been successfully deleted."
       });
       setIsDialogOpen(false);
-      navigate('/products');
+      navigate('/');
     } catch (error) {
       toast({
         title: "Error",

@@ -25,7 +25,7 @@ const CategoryDetail = () => {
   const decodedCategoryName = categoryName ? decodeURIComponent(categoryName) : "";
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -33,18 +33,18 @@ const CategoryDetail = () => {
           .from('produtos')
           .select('*')
           .eq('categoria', decodedCategoryName);
-        
+
         if (error) throw error;
-        
+
         // Add computed stockLevel property
         const productsWithStockLevel = data.map(product => ({
           ...product,
-          stockLevel: product.estoque === 0 
-            ? 'out' 
-            : product.estoque < 10 
-              ? 'low' 
-              : product.estoque < 50 
-                ? 'medium' 
+          stockLevel: product.estoque === 0
+            ? 'out'
+            : product.estoque < 10
+              ? 'low'
+              : product.estoque < 50
+                ? 'medium'
                 : 'high'
         }));
 
@@ -68,7 +68,7 @@ const CategoryDetail = () => {
   const totalProducts = products.length;
   const totalItems = products.reduce((sum, product) => sum + product.estoque, 0);
   const totalValue = products.reduce((sum, product) => sum + (product.preco * product.estoque), 0);
-  
+
   // Initialize edit form with current category data
   useEffect(() => {
     if (decodedCategoryName) {
@@ -97,7 +97,7 @@ const CategoryDetail = () => {
         .from('produtos')
         .update({ categoria: editCategory.nome })
         .eq('categoria', decodedCategoryName);
-      
+
       if (error) throw error;
 
       toast({
@@ -122,14 +122,13 @@ const CategoryDetail = () => {
 
   const handleDeleteCategory = async () => {
     setIsDeleting(true);
-    
+
     try {
       // Update all products in this category to have null category
       const { error } = await supabase
         .from('produtos')
-        .update({ categoria: null })
-        .eq('categoria', decodedCategoryName);
-      
+        .delete()
+        .eq('categoria', decodedCategoryName)
       if (error) throw error;
 
       toast({
@@ -148,7 +147,7 @@ const CategoryDetail = () => {
     }
   };
 
-  const filteredProducts = products.filter(product => 
+  const filteredProducts = products.filter(product =>
     product.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.descricao?.toLowerCase().includes(searchQuery.toLowerCase()) || false
@@ -162,7 +161,7 @@ const CategoryDetail = () => {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/categories">
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Back to Categories
+              Voltar à Categorias
             </Link>
           </Button>
         </div>
@@ -172,7 +171,7 @@ const CategoryDetail = () => {
             <h1 className="text-3xl font-bold">{decodedCategoryName}</h1>
             <p className="text-muted-foreground">Category details and products</p>
           </div>
-          
+
           <div className="flex gap-2">
             <Dialog>
               <DialogTrigger asChild>
@@ -188,19 +187,19 @@ const CategoryDetail = () => {
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="nome">Category Name</Label>
-                    <Input 
-                      id="nome" 
-                      value={editCategory.nome} 
-                      onChange={e => setEditCategory({...editCategory, nome: e.target.value})} 
+                    <Input
+                      id="nome"
+                      value={editCategory.nome}
+                      onChange={e => setEditCategory({ ...editCategory, nome: e.target.value })}
                       placeholder="Enter category name"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="descricao">Description (Optional)</Label>
-                    <Textarea 
-                      id="descricao" 
-                      value={editCategory.descricao} 
-                      onChange={e => setEditCategory({...editCategory, descricao: e.target.value})} 
+                    <Textarea
+                      id="descricao"
+                      value={editCategory.descricao}
+                      onChange={e => setEditCategory({ ...editCategory, descricao: e.target.value })}
                       placeholder="Enter category description"
                     />
                   </div>
@@ -232,7 +231,7 @@ const CategoryDetail = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction 
+                  <AlertDialogAction
                     onClick={handleDeleteCategory}
                     disabled={isDeleting}
                   >
@@ -253,22 +252,22 @@ const CategoryDetail = () => {
               <p className="text-2xl font-bold">{totalProducts}</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Total Inventory</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{totalItems} units</p>
+              <p className="text-2xl font-bold">{totalItems} unidades</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Inventory Value</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">${totalValue.toFixed(2)}</p>
+              <p className="text-2xl font-bold">R${totalValue.toFixed(2)}</p>
             </CardContent>
           </Card>
         </div>
@@ -281,7 +280,7 @@ const CategoryDetail = () => {
             className="w-full max-w-md"
           />
         </div>
-        
+
         {isLoading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
