@@ -32,6 +32,7 @@ const Navbar = () => {
         <nav className="flex items-center gap-4 md:gap-6 ml-6 lg:ml-10">
           <Link to="/" className="text-sm font-medium hover:underline underline-offset-4">Dashboard</Link>
           <Link to="/categories" className="text-sm font-medium hover:underline underline-offset-4">Categorias</Link>
+          {/* <Link to="/product" className="text-sm font-medium hover:underline underline-offset-4">test</Link> */}
         </nav>
         <div className="ml-auto flex items-center gap-2">
           {user ? (

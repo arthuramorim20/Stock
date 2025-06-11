@@ -88,7 +88,7 @@ const Index = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">Dashboard</h1>
-            {/* <p className="text-muted-foreground">Welcome to your stock management dashboard</p> */}
+            <p className="text-muted-foreground">Welcome to your stock management dashboard</p>
           </div>
           <Button asChild>
             <Link to="/products/new">Adicionar novo produto</Link>

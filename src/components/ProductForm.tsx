@@ -251,7 +251,9 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
                     {category}
                   </SelectItem>
                 ))}
-                <SelectItem value="new">+ Adicionar nova categoria</SelectItem>
+                <SelectItem value="new">
+                  + Adicionar nova categoria
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

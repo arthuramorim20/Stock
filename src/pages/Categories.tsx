@@ -77,7 +77,7 @@ const Categories = () => {
       const { error } = await supabase
         .from("produtos")
         .insert({
-          nome: `${newCategory.nome} (Template)`,
+          nome: `${newCategory.nome}`,
           sku: `CAT-${Date.now()}`,
           preco: 0,
           estoque: 0,
