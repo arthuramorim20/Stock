@@ -5,12 +5,12 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/StatCard";
 import ProductCard from "@/components/ProductCard";
-import { fetchDashboardStats, mockCategories } from "@/data/mockData";
+import { fetchDashboardStats } from "@/data/mockData";
 import { Package, ShoppingCart, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/SearchInput";
 import { supabase } from "@/integrations/supabase/client";
-import { Product, DashboardStat, Category } from "../types"
+import { Product, DashboardStat } from "../types"
 
 
 

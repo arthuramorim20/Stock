@@ -200,7 +200,7 @@ const CategoryDetail = () => {
                       id="descricao"
                       value={editCategory.descricao}
                       onChange={e => setEditCategory({ ...editCategory, descricao: e.target.value })}
-                      placeholder="Enter category description"
+                      placeholder="Descrição da categoria"
                     />
                   </div>
                 </div>
@@ -224,13 +224,13 @@ const CategoryDetail = () => {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This will delete the category "{decodedCategoryName}". Products in this category will no longer be assigned to any category.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteCategory}
                     disabled={isDeleting}
@@ -246,7 +246,7 @@ const CategoryDetail = () => {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>Total Products</CardTitle>
+              <CardTitle>Total de Produtos</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{totalProducts}</p>

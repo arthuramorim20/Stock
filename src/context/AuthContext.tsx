@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null); //Recebe a session do user da interface type que construímos
-  const [user, setUser] = useState<User | null>(null);//receber o user
+  const [user, setUser] = useState<User | null>(null);//recebe o user
   const [loading, setLoading] = useState(true); //recebe o loading como estado inicial sendo true
 
   useEffect(() => {
