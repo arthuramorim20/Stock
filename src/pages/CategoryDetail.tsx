@@ -177,16 +177,16 @@ const CategoryDetail = () => {
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Category
+                  Editar categoria
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Edit Category</DialogTitle>
+                  <DialogTitle>Editar categoria</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nome">Category Name</Label>
+                    <Label htmlFor="nome">Nome da categoria</Label>
                     <Input
                       id="nome"
                       value={editCategory.nome}
@@ -195,7 +195,7 @@ const CategoryDetail = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="descricao">Description (Optional)</Label>
+                    <Label htmlFor="descricao">Descrição (Opcional)</Label>
                     <Textarea
                       id="descricao"
                       value={editCategory.descricao}
@@ -206,10 +206,10 @@ const CategoryDetail = () => {
                 </div>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">Cancelar</Button>
                   </DialogClose>
                   <Button onClick={handleEditCategory} disabled={isSubmitting}>
-                    {isSubmitting ? "Updating..." : "Update Category"}
+                    {isSubmitting ? "Atualizando..." : "Atualizar Categoria"}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -219,7 +219,7 @@ const CategoryDetail = () => {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
+                  Deletar
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -235,7 +235,7 @@ const CategoryDetail = () => {
                     onClick={handleDeleteCategory}
                     disabled={isDeleting}
                   >
-                    {isDeleting ? "Deleting..." : "Delete"}
+                    {isDeleting ? "Deletando..." : "Deletar"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -255,7 +255,7 @@ const CategoryDetail = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Total Inventory</CardTitle>
+              <CardTitle>Total do inventário</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{totalItems} unidades</p>
@@ -264,7 +264,7 @@ const CategoryDetail = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Inventory Value</CardTitle>
+              <CardTitle>Valor Inventário</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">R${totalValue.toFixed(2)}</p>
@@ -308,7 +308,7 @@ const CategoryDetail = () => {
               {searchQuery ? "Try a different search term" : "Add products to this category to see them here"}
             </p>
             <Button className="mt-4" asChild>
-              <Link to="/products/new">Add New Product</Link>
+              <Link to="/products/new">Adicionar novo produto</Link>
             </Button>
           </div>
         )}
