@@ -33,8 +33,8 @@ const Auth = () => {
         if (error) throw error;
         
         toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in."
+          title: "Bem vindo!",
+          description: "Login realizado com sucesso."
         });
         
         navigate("/");
@@ -47,8 +47,8 @@ const Auth = () => {
         if (error) throw error;
         
         toast({
-          title: "Account created",
-          description: "Please check your email for verification instructions."
+          title: "Conta criada",
+          description: "Por favor verifique seu email e siga as instruções."
         });
       }
     } catch (error) {
@@ -97,7 +97,7 @@ const Auth = () => {
         <form className="space-y-6 mt-8" onSubmit={handleAuth}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email address
+              Email
             </label>
             <Input
               id="email"
@@ -111,7 +111,7 @@ const Auth = () => {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
+              Senha
             </label>
             <Input
               id="password"
@@ -124,13 +124,13 @@ const Auth = () => {
           </div>
 
           <Button className="w-full" type="submit" disabled={loading}>
-            {loading ? "Processing..." : mode === "signin" ? "Sign In" : "Sign Up"}
+            {loading ? "Processing..." : mode === "signin" ? "Entrar" : "Cadastrar"}
           </Button>
 
           <div className="text-center text-sm">
             {mode === "signin" ? (
               <p>
-                Don't have an account?{" "}
+                Não tem uma conta?{" "}
                 <button
                   type="button"
                   className="text-primary hover:underline"
@@ -141,7 +141,7 @@ const Auth = () => {
               </p>
             ) : (
               <p>
-                Already have an account?{" "}
+                Já tem uma conta?{" "}
                 <button
                   type="button"
                   className="text-primary hover:underline"

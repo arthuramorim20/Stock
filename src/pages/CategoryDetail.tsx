@@ -43,6 +43,7 @@ const CategoryDetail = () => {
             ? 'out'
             : product.estoque < 10
               ? 'low'
+              
               : product.estoque < 50
                 ? 'medium'
                 : 'high'
