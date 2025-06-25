@@ -28,22 +28,38 @@ const CategoryDetail = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      // Buscar o id da categoria pelo nome
+      const { data: categoria, error: catError } = await supabase
+        .from('categorias')
+        .select('id')
+        .eq('nome', decodedCategoryName)
+        .single();
+
+      if (catError || !categoria) {
+        toast({
+          title: "Error",
+          description: "Categoria inválida.",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        setProducts([]);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('produtos')
           .select('*')
-          .eq('categoria', decodedCategoryName);
+          .eq('categoria_id', categoria.id);
 
         if (error) throw error;
 
-        // Add computed stockLevel property
         const productsWithStockLevel = data.map(product => ({
           ...product,
           stockLevel: product.estoque === 0
             ? 'out'
             : product.estoque < 10
               ? 'low'
-              
               : product.estoque < 50
                 ? 'medium'
                 : 'high'
@@ -54,7 +70,7 @@ const CategoryDetail = () => {
         console.error("Error fetching products:", error);
         toast({
           title: "Error",
-          description: "Failed to load products",
+          description: error instanceof Error ? error.message : JSON.stringify(error),
           variant: "destructive"
         });
       } finally {
@@ -93,11 +109,29 @@ const CategoryDetail = () => {
     setIsSubmitting(true);
 
     try {
-      // Update all products in this category to the new category name
+      // 1. Buscar o id da categoria atual
+      const { data: oldCategory, error: oldCatError } = await supabase
+        .from('categorias')
+        .select('id')
+        .eq('nome', decodedCategoryName)
+        .single();
+
+      if (oldCatError || !oldCategory) throw oldCatError || new Error("Categoria original não encontrada");
+
+      // 2. Buscar o id da nova categoria
+      const { data: newCategory, error: newCatError } = await supabase
+        .from('categorias')
+        .select('id')
+        .eq('nome', editCategory.nome)
+        .single();
+
+      if (newCatError || !newCategory) throw newCatError || new Error("Nova categoria não encontrada");
+
+      // 3. Atualizar os produtos para a nova categoria_id
       const { error } = await supabase
         .from('produtos')
-        .update({ categoria: editCategory.nome })
-        .eq('categoria', decodedCategoryName);
+        .update({ categoria_id: newCategory.id })
+        .eq('categoria_id', oldCategory.id);
 
       if (error) throw error;
 
@@ -125,11 +159,21 @@ const CategoryDetail = () => {
     setIsDeleting(true);
 
     try {
-      // Update all products in this category to have null category
+      // Buscar o id da categoria pelo nome
+      const { data: categoria, error: catError } = await supabase
+        .from('categorias')
+        .select('id')
+        .eq('nome', decodedCategoryName)
+        .single();
+
+      if (catError || !categoria) throw catError || new Error("Categoria inválida.");
+
+      // Deletar produtos dessa categoria
       const { error } = await supabase
         .from('produtos')
         .delete()
-        .eq('categoria', decodedCategoryName)
+        .eq('categoria_id', categoria.id);
+
       if (error) throw error;
 
       toast({

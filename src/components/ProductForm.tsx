@@ -36,22 +36,20 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<{ id: number; nome: string }[]>([]);
 
-  // Fetch categories
+  // Buscar categorias da tabela 'categorias'
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const { data, error } = await supabase
-          .from('produtos')
-          .select('categoria')
-          .not('categoria', 'is', null)
-          .order('categoria', { ascending: true });
-        
+          .from('categorias')
+          .select('id, nome')
+          .order('nome', { ascending: true });
+
         if (error) throw error;
-        
-        const uniqueCategories = [...new Set(data.map(item => item.categoria))].filter(Boolean);
-        setCategories(uniqueCategories);
+
+        setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -60,11 +58,11 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
     fetchCategories();
   }, []);
 
-  // Fetch product data if editing
+  // Buscar dados do produto se for edição
   useEffect(() => {
     const fetchProduct = async () => {
       if (!productId) return;
-      
+
       try {
         setIsLoading(true);
         const { data, error } = await supabase
@@ -72,16 +70,16 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
           .select('*')
           .eq('id', parseInt(productId))
           .single();
-        
+
         if (error) throw error;
-        
+
         setFormData({
           nome: data.nome,
           sku: data.sku,
           descricao: data.descricao || "",
           preco: data.preco.toString(),
           estoque: data.estoque?.toString() || "0",
-          categoria: data.categoria || "",
+          categoria: data.categoria_id ? data.categoria_id.toString() : "",
         });
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -111,7 +109,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
         descricao: formData.descricao,
         preco: parseFloat(formData.preco),
         estoque: parseInt(formData.estoque),
-        categoria: formData.categoria,
+        categoria_id: formData.categoria ? parseInt(formData.categoria) : null,
       };
 
       if (isEdit && productId) {
@@ -124,8 +122,8 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
         if (error) throw error;
         
         toast({
-          title: "Success",
-          description: "Product has been updated successfully."
+          title: "Sucesso",
+          description: "Produto foi criado com sucesso."
         });
         navigate(`/products/${productId}`);
       } else {
@@ -137,7 +135,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
         if (error) throw error;
         
         toast({
-          title: "Success",
+          title: "Sucesso",
           description: "Product has been created successfully."
         });
         navigate('/');
@@ -176,7 +174,7 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
         <Button variant="ghost" size="sm" asChild>
           <Link to={isEdit && productId ? `/` : "/"}>
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Back
+            Voltar
           </Link>
         </Button>
       </div>
@@ -246,14 +244,12 @@ const ProductForm = ({ productId, isEdit = false }: ProductFormProps) => {
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
-                {categories?.map((category, index) => (
-                  <SelectItem key={index} value={category}>
-                    {category}
+                {categories?.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.nome}
                   </SelectItem>
                 ))}
-                <SelectItem value="new">
-                  + Adicionar nova categoria
-                </SelectItem>
+                {/* Remova a opção de adicionar nova categoria aqui, se não for implementar */}
               </SelectContent>
             </Select>
           </div>

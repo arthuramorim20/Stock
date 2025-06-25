@@ -21,17 +21,17 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data: products, error } = await supabase
-        .from("produtos")
-        .select("categoria");
+      const { data: categorias, error } = await supabase
+        .from("categorias")
+        .select("*");
 
       if (error) throw error;
 
       // Count and group products by category
-      const categoryCounts = {};
-      products.forEach(product => {
-        if (product.categoria) {
-          categoryCounts[product.categoria] = (categoryCounts[product.categoria] || 0) + 1;
+      const categoryCounts: { [key: string]: number } = {};
+      categorias.forEach(categorias => {
+        if (categorias && categorias.nome) {
+          categoryCounts[categorias.nome] = (categoryCounts[categorias.nome] || 0) + 1;
         }
       });
 
@@ -75,13 +75,9 @@ const Categories = () => {
     try {
       // Create a product with the new category (or update existing one)
       const { error } = await supabase
-        .from("produtos")
+        .from("categorias")
         .insert({
-          nome: `${newCategory.nome}`,
-          sku: `CAT-${Date.now()}`,
-          preco: 0,
-          estoque: 0,
-          categoria: newCategory.nome,
+          nome: newCategory.nome,
           descricao: newCategory.descricao || null
         });
 

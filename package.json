@@ -11,7 +11,7 @@
     "test": "node /src/context/AuthContext.tsx",
     "lint": "eslint .",
     "preview": "vite preview",
-    "migration": "npx supabase gen types typescript --local  > ./src/integrations/types.ts"
+    "migration": "npx supabase gen types typescript --project-id ztmzxvyibhldzeymcjto > ./src/integrations/types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

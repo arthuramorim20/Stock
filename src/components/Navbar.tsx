@@ -10,6 +10,7 @@ import { LogOut, Package, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
+// import { AvatarImage } from "@radix-ui/react-avatar";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();

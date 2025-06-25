@@ -24,4 +24,9 @@ dist-ssr
 *.sw?
 .env
 
+.vscode/extensions.json
 /supabase/migrations/20250602134501_remote_schema.sql
+src/integrations/types.ts
+supabase/config.toml
+supabase/.gitignore
+supabase/migrations/20250625111134_remote_schema.sql
